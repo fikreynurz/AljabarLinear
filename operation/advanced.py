@@ -287,8 +287,9 @@ def solve(mat: matrix.Matrix, b: matrix.Matrix) -> matrix.Matrix:
 
     # Check if the matrix and the vector have the same number of rows.
     assert m == b.get_size()[0], 'The matrix and the vector do not have the same number of rows.'
+    assert b.get_size()[1] == 1, 'The vector is not a column vector.'
 
     # Solve the system of linear equations.
-    solution = inverse(mat) * b
+    solution = inverse(mat).matrix_multiply(b)
 
     return solution
