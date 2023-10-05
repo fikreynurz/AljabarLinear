@@ -229,6 +229,40 @@ def main():
                                 except AssertionError as e:
                                     print(e)
                             case 5:
+                                # Find the reduced row echelon form of a matrix.
+                                mat = input('Enter the name of the matrix: ')
+
+                                if mat not in matrices:
+                                    print(f'Matrix "{mat}" does not exist. Please try again.')
+                                    continue
+
+                                try:
+                                    result = advanced.reduced_row_echelon(matrices[mat])
+                                    print('The reduced row echelon form of the matrix is:')
+                                    Display.printMatrix(result)
+                                except AssertionError as e:
+                                    print(e)
+                            case 6:
+                                # Calculate solution of a system of linear equations.
+                                mat = input('Enter the name of the matrix: ')
+
+                                if mat not in matrices:
+                                    print(f'Matrix "{mat}" does not exist. Please try again.')
+                                    continue
+
+                                b = input('Enter the name of the vector: ')
+
+                                if b not in matrices:
+                                    print(f'Vector "{b}" does not exist. Please try again.')
+                                    continue
+
+                                try:
+                                    result = advanced.solve(matrices[mat], matrices[b])
+                                    print('The solution of the system of linear equations is:')
+                                    Display.printMatrix(result)
+                                except AssertionError as e:
+                                    print(e)
+                            case 7:
                                 # Go back to the main menu.
                                 continue
                             case _:

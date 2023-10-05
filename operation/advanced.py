@@ -202,36 +202,93 @@ def row_echelon(mat: matrix.Matrix) -> matrix.Matrix:
     ref = deepcopy(mat)
 
     # Iterate through the rows.
-    for i in range(m):
-        # Find the first non-zero element in the row.
-        pivot = None
-        for j in range(n):
-            if ref.get_value(i + 1, j + 1) != 0:
-                pivot = j
-                break
+    last_nonzero_row = m
+    for i in range(min(m, n)):
+        if last_nonzero_row == i:
+            break
 
-        # If no non-zero element is found, skip the row.
-        if pivot is None:
-            ref = swap_rows(ref, i, m - 1)
-            m -= 1
-            i -= 1
+        # Find the first row with a nonzero entry in the current column.
+        pivot_row = next((r for r in range(i, m) if ref.get_value(r + 1, i + 1) != 0), None)
+
+        # If no nonzero entry is found, move to the next column.
+        if pivot_row is None:
+            last_nonzero_row -= 1
+            ref = swap_rows(ref, i, last_nonzero_row)
             continue
 
-        # Swap the rows if necessary to bring the pivot to the diagonal.
-        if pivot != i:
-            ref = swap_rows(ref, i, pivot)
+        # Swap the current row with the pivot row.
+        if pivot_row != i:
+            ref = swap_rows(ref, i, pivot_row)
 
-        # Scale the row to make the pivot element 1.
-        pivot_value = ref.get_value(pivot + 1, pivot + 1)
-        if pivot_value != 1:
-            ref = scale_row(ref, pivot, 1 / pivot_value)
-
-        # Eliminate the pivot element from the rows below it.
-        for j in range(i + 1, m):
-            factor = ref.get_value(j + 1, pivot + 1)
+        # Add multiples of the current row to lower rows to eliminate entries in the current column.
+        pivot_value = ref.get_value(i + 1, i + 1)
+        for r in range(i + 1, m):
+            factor = ref.get_value(r + 1, i + 1)
             if factor != 0:
-                ref = add_multiple_times_row(ref, j, i, -factor)
+                ref = add_multiple_times_row(ref, r, i, -factor / pivot_value)
 
     # Return the row echelon form.
     return ref
 
+
+def reduced_row_echelon(mat: matrix.Matrix) -> matrix.Matrix:
+    '''
+    Calculates the reduced row echelon form of a matrix.
+
+    args:
+        mat: The matrix to calculate the reduced row echelon form of.
+
+    returns:
+        The reduced row echelon form of the matrix.
+    '''
+    m, n = mat.get_size()
+
+    # Create a copy of the matrix.
+    rref = deepcopy(mat)
+
+    rref = row_echelon(rref)
+
+    # Scale the pivot rows to have a leading coefficient of 1.
+    for i in range(min(m, n)):
+        pivot_col = next((c for c in range(i, n) if rref.get_value(i + 1, c + 1) != 0), None)
+        if pivot_col is not None:
+            pivot_value = rref.get_value(i + 1, pivot_col + 1)
+            rref = scale_row(rref, i, 1 / pivot_value)
+
+    # Convert the matrix to reduced row echelon form.
+    for i in range(min(m, n) - 1, -1, -1):
+        pivot_col = next((c for c in range(i, n) if rref.get_value(i + 1, c + 1) != 0), None)
+        if pivot_col is not None:
+            for row in range(i):
+                rref = add_multiple_times_row(rref, row, i, -rref.get_value(row + 1, pivot_col + 1))
+
+    # Return the reduced row echelon form.
+    return rref
+
+
+def solve(mat: matrix.Matrix, b: matrix.Matrix) -> matrix.Matrix:
+    '''
+    Solves a system of linear equations.
+
+    args:
+        mat: The matrix of coefficients.
+        b: The matrix of constants.
+
+    returns:
+        The solution of the system of linear equations.
+    '''
+    m, n = mat.get_size()
+
+    # Check if the matrix is square.
+    assert m == n, 'The matrix is not square.'
+
+    # Check if the matrix is invertible.
+    assert mat.determinant() != 0, 'The matrix is not invertible.'
+
+    # Check if the matrix and the vector have the same number of rows.
+    assert m == b.get_size()[0], 'The matrix and the vector do not have the same number of rows.'
+
+    # Solve the system of linear equations.
+    solution = inverse(mat) * b
+
+    return solution

@@ -10,7 +10,7 @@ def printMatrix(matrix: matrix.Matrix) -> None:
         None
     '''
 
-    format_number = lambda x: x if x % 1 else int(x)
+    format_number = lambda x: round(x, 2) if x % 1 else int(x)
     
     max_digits = [max(len(str(format_number(element))) for element in col) for col in zip(*matrix.values)]
     
@@ -67,5 +67,7 @@ def printAdvancedOperationsMenu():
     print('2. Calculate the determinant of a matrix')
     print('3. Calculate the inverse of a matrix')
     print('4. Make it REF')
-    print('5. Go back to the main menu')
+    print('5. Make it RREF')
+    print('6. Calculate solution of a system of linear equations')
+    print('7. Go back to the main menu')
 
