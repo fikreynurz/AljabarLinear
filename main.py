@@ -21,7 +21,13 @@ def getMatrixFromUser() -> matrix.Matrix:
     for i in range(row):
         row_input = []
         for j in range(col):
-            element = float(input(f'Enter the element ({i + 1} {j + 1}): '))
+            while True:
+                try:
+                    element = float(input(f'Enter the element ({i + 1} {j + 1}): '))    
+                    break
+                except ValueError:
+                    print('Input Invalid!')
+                    pass
             row_input.append(element)
         mat.append(row_input)
     
