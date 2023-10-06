@@ -137,7 +137,9 @@ def main():
                                     continue
 
                                 try:
-                                    result = mat1.matrix_sub(mat2)
+                                    temp = deepcopy(mat2)
+                                    temp.scalar_multiply(-1)
+                                    result = mat1.matrix_add(temp)
                                     print('The difference of the matrices is:')
                                     Display.printMatrix(result)
                                 except AssertionError as e:
