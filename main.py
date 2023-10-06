@@ -1,6 +1,7 @@
 import MatrixProgram.matrix as matrix
 import iomodule.Display as Display
 import operation.advanced as advanced
+from copy import deepcopy
 
 
 def getMatrixFromUser() -> matrix.Matrix:
@@ -161,10 +162,16 @@ def main():
                                 if mat not in matrices:
                                     print(f'Matrix "{mat}" does not exist. Please try again.')
                                     continue
-
-                                scalar = float(input('Enter the scalar: '))
-                                result = matrices[mat].scalar_multiply(scalar)
-                                print('The product of the matrix with the scalar is:')
+                                try:
+                                    scalar = float(input('Enter the scalar: '))
+                                    result = deepcopy(matrices[mat])
+                                    result.scalar_multiply(scalar)
+                                    print('The product of the matrix with the scalar is:')
+                                    Display.printMatrix(result)
+                                except ValueError:
+                                    print('Invalid input, please try again')
+                                except AssertionError as e:
+                                    print(e)
                             case 5:
                                 # Go back to the main menu.
                                 continue
