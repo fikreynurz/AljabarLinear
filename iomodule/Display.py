@@ -10,6 +10,8 @@ def printMatrix(matrix: matrix.Matrix) -> None:
         None
     '''
 
+    assert matrix, 'The matrix must not None Object Type.'
+
     format_number = lambda x: round(x, 2) if x % 1 else int(x)
     
     max_digits = [max(len(str(format_number(element))) for element in col) for col in zip(*matrix.values)]
