@@ -545,6 +545,39 @@ class Matrix:
                     otherMatrix.values[i][j]
 
         return(newMatrix)
+    
+    def matrix_sub(self, otherMatrix):
+        """
+        Produces the resultant matrix from subtracting another matrix from the
+        current matrix.
+
+        Parameters
+        ----------
+        otherMatrix : object of class Matrix
+            the matrix to be subtracted from the current matrix
+
+        Returns
+        -------
+        newMatrix : object of class Matrix
+            the resultant matrix from the subtraction of the other matrix
+        """
+
+        # Ensure argument is valid
+        assert isinstance(otherMatrix, Matrix), \
+            "Argument must be a matrix."
+        m1, n1 = self.get_size()
+        m2, n2 = otherMatrix.get_size()
+        assert m1 == m2 and n1 == n2, "Matrices must be the same size."
+
+        # Instantiate a matrix with the same size as placeholders
+        newMatrix = Matrix([[0 for i in range(n1)] for j in range(m1)])
+
+        for i in range(m1):
+            for j in range(n1):
+                # Subtract the corresponding elements of the matrices
+                newMatrix.values[i][j] = self.values[i][j] - otherMatrix.values[i][j]
+
+        return newMatrix
 
     def matrix_multiply(self, otherMatrix):
         """
